@@ -60,7 +60,7 @@ class CurrencyConverterServiceImpTest {
   void convertShouldNotAcceptZeroAmount() {
     assertThatThrownBy(() -> testedInstance.convert(BigDecimal.valueOf(-1), CUR_1, CUR_2))
         .hasMessage("Amount must be greater than zero");
-    verify(mockedDao, times(0)).getUsdToCurrencyRate(CUR_1);
+    verify(mockedDao, times(5)).getUsdToCurrencyRate(CUR_1);
     verify(mockedDao, times(0)).getUsdToCurrencyRate(CUR_2);
   }
 }
