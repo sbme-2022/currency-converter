@@ -9,9 +9,11 @@ import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.mockito.Mockito;
 
 @TestInstance(Lifecycle.PER_CLASS)
 class CurrencyConverterServiceImpTest {
@@ -19,8 +21,8 @@ class CurrencyConverterServiceImpTest {
   public static final String CUR_1 = "CUR1";
   public static final String CUR_2 = "CUR2";
   public static final String NOT_EXIST_CUR = "CUR_X";
-  private CurrencyConverterService testedInstance;
-  private CurrencyConverterDao mockedDao = mock(CurrencyConverterDao.class);
+  private transient CurrencyConverterService testedInstance;
+  private final transient CurrencyConverterDao mockedDao = mock(CurrencyConverterDao.class);
 
   @BeforeAll
   void setup() {
@@ -28,6 +30,11 @@ class CurrencyConverterServiceImpTest {
     when(mockedDao.getUsdToCurrencyRate(CUR_2)).thenReturn(BigDecimal.valueOf(5));
     when(mockedDao.getUsdToCurrencyRate(NOT_EXIST_CUR)).thenThrow(new CurrencyDoesntExistException(NOT_EXIST_CUR));
     testedInstance = new CurrencyConverterServiceImp(mockedDao);
+  }
+
+  @BeforeEach
+  void initialize() {
+    Mockito.clearInvocations(mockedDao);
   }
 
   @Test
